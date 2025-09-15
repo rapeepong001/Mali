@@ -4,9 +4,9 @@ FROM node:18-alpine
 # Create app directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
+# Install app dependencies (use npm install to avoid npm ci lockfile issues on some build environments)
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm install --production --no-audit --no-fund
 
 # Copy app source
 COPY . .
