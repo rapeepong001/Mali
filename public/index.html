@@ -10,10 +10,14 @@
       padding: 0;
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(to bottom, #4b3b86, #f8c291);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
       color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh;
     }
 
     h1 {
@@ -45,8 +49,26 @@
     }
 
     .avatar img {
-      width: 200px;
+      width: 160px;
+      height: 160px;
+      object-fit: cover;
       border-radius: 15px;
+      display: block;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.06);
+    }
+
+    /* fallback label when image missing */
+    .avatar .fallback {
+      width: 160px;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg,#ffffff22,#ffffff11);
+      border-radius: 15px;
+      font-weight: 600;
+      color: #fff;
     }
 
     .avatar-name {
@@ -61,13 +83,13 @@
   <h1>เลือกเพื่อน AI ของคุณ 💖</h1>
 
   <div class="avatar-list">
-    <div class="avatar" onclick="goToChat('Momo')">
-      <img src="Momo.png" alt="Momo" />
+    <div class="avatar" onclick="goToChat('Momo')" title="Momo">
+      <img src="/Momo.png" alt="Momo" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'><rect width=\'100%\' height=\'100%\' fill=\'%23ffffff22\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23ffffff%27 font-size=\'20\'>Momo</text></svg>'" />
       <div class="avatar-name">Momo</div>
     </div>
 
-    <div class="avatar" onclick="goToChat('Hana')">
-      <img src="Hana.png" alt="Hana" />
+    <div class="avatar" onclick="goToChat('Hana')" title="Hana">
+      <img src="/Hana.png" alt="Hana" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'><rect width=\'100%\' height=\'100%\' fill=\'%23ffffff22\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%23ffffff%27 font-size=\'20\'>Hana</text></svg>'" />
       <div class="avatar-name">Hana</div>
     </div>
   </div>
