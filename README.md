@@ -40,3 +40,5 @@ It will return:
 
 ---
 Mali-secure and sweet 💖
+
+<!-- Deploy trigger: touched README to force Railway rebuild -->
