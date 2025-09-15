@@ -26,11 +26,11 @@
 
 <div id="chat-box"></div>
 <div id="input-area">
-  <input type="text" id="user-input" placeholder="พิมพ์ข้อความ..." />
+  <input type="text" id="user-input" name="user-input" placeholder="พิมพ์ข้อความ..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
   <button onclick="sendMessage()">ส่ง</button>
 </div>
 <div style="padding:10px;background:#fff0f5;display:flex;gap:8px;align-items:center;">
-  <input id="name-field" placeholder="ตั้งชื่อของคุณ (ตัวอย่าง: Rap)" value="" />
+  <input id="name-field" name="name-field" placeholder="ตั้งชื่อของคุณ (ตัวอย่าง: Rap)" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
   <button onclick="setName()">ตั้งชื่อ</button>
   <button onclick="resetName()">รีเซ็ทชื่อ</button>
 </div>
