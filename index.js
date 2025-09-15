@@ -25,6 +25,11 @@ app.post('/api/chat', async (req, res) => {
     return res.status(400).json({ error: 'Missing prompt' });
   }
 
+  if (!process.env.OPENAI_API_KEY) {
+    // Provide a friendly error so the frontend can show a clear message
+    return res.status(503).json({ error: 'missing_api_key', message: 'Server not configured: OPENAI_API_KEY is missing. Please set the environment variable.' });
+  }
+
   try {
     const response = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',

@@ -64,7 +64,12 @@
         body: JSON.stringify({ prompt: text })
       });
       const data = await resp.json();
-      appendMessage(data.reply || 'ขออภัย ไม่มีคำตอบจากเซิร์ฟเวอร์', true);
+      if (!resp.ok) {
+        const msg = data && data.message ? data.message : data.error || 'Server error';
+        appendMessage(`ขออภัย: ${msg}`, true);
+      } else {
+        appendMessage(data.reply || 'ขออภัย ไม่มีคำตอบจากเซิร์ฟเวอร์', true);
+      }
     } catch (e) {
       appendMessage('เกิดข้อผิดพลาดเชื่อมต่อ', true);
     }
