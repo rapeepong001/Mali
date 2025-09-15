@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { OpenAI } = require('openai');
+const { buildHeartPrompt } = require('./server_persona');
 
 const app = express();
 app.use(cors());
@@ -19,8 +20,23 @@ if (!process.env.OPENAI_API_KEY) {
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+// In-memory simple memory: { userIdOrName: { name: "...", lastSeen: timestamp } }
+const userMemory = {};
+
 app.post('/api/chat', async (req, res) => {
-  const { prompt } = req.body;
+  const { prompt, character, userName } = req.body;
+  // record userName in memory if provided
+  if (userName) {
+    userMemory[userName] = { name: userName, lastSeen: Date.now() };
+  }
+  const effectiveUser = userName || (prompt && prompt._user) || null;
+  const userKey = effectiveUser || 'anonymous';
+
+  const { system, user } = buildHeartPrompt(character || 'Momo', effectiveUser, prompt);
+  
+  if (!prompt) {
+    return res.status(400).json({ error: 'Missing prompt' });
+  }
   if (!prompt) {
     return res.status(400).json({ error: 'Missing prompt' });
   }
@@ -31,16 +47,21 @@ app.post('/api/chat', async (req, res) => {
   }
 
   try {
-    // OpenAI v4 client: use the Chat Completions helper
+    // OpenAI v4 client: send a system message with persona context + the user message
+    const messages = [
+      { role: 'system', content: system },
+      { role: 'user', content: user },
+    ];
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
+      messages,
     });
     // The v4 response shape nests the output differently
     const reply = response.choices && response.choices[0] && response.choices[0].message && response.choices[0].message.content
       ? response.choices[0].message.content
       : (response.choices && response.choices[0] && response.choices[0].text) || '';
-    res.json({ reply });
+  // Optionally update memory or other state here
+  res.json({ reply });
   } catch (err) {
     // Log useful debug info without exposing secrets
     try {
