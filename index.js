@@ -31,11 +31,16 @@ app.post('/api/chat', async (req, res) => {
   }
 
   try {
-    const response = await openai.createChatCompletion({
+    // OpenAI v4 client: use the Chat Completions helper
+    const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
     });
-    res.json({ reply: response.data.choices[0].message.content });
+    // The v4 response shape nests the output differently
+    const reply = response.choices && response.choices[0] && response.choices[0].message && response.choices[0].message.content
+      ? response.choices[0].message.content
+      : (response.choices && response.choices[0] && response.choices[0].text) || '';
+    res.json({ reply });
   } catch (err) {
     // Log useful debug info without exposing secrets
     try {
