@@ -31,7 +31,8 @@ app.post('/api/chat', async (req, res) => {
     try { await saveUserName(userName); } catch (e) { console.error('Failed to save user name:', e.message); }
   }
   const effectiveUser = userName || (prompt && prompt._user) || null;
-  const { system, user } = buildHeartPrompt(character || 'Momo', effectiveUser, prompt);
+  const politeness = req.body.politeness || 'normal';
+  const { system, user } = buildHeartPrompt(character || 'Momo', effectiveUser, prompt, politeness);
 
   if (!prompt) {
     return res.status(400).json({ error: 'Missing prompt' });

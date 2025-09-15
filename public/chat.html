@@ -33,6 +33,12 @@
   <input id="name-field" name="name-field" placeholder="ตั้งชื่อของคุณ (ตัวอย่าง: Rap)" value="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
   <button onclick="setName()">ตั้งชื่อ</button>
   <button onclick="resetName()">รีเซ็ทชื่อ</button>
+  <label style="margin-left:8px;">ระดับความสุภาพ:</label>
+  <select id="politeness" onchange="setPoliteness(this.value)">
+    <option value="normal">ปกติ</option>
+    <option value="cute">น่ารัก</option>
+    <option value="formal">เป็นทางการ</option>
+  </select>
 </div>
 
 <script>
@@ -74,10 +80,11 @@
     input.value = '';
 
     try {
+      const politeness = localStorage.getItem('mali_politeness') || 'normal';
       const resp = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: text, character: friend, userName })
+        body: JSON.stringify({ prompt: text, character: friend, userName, politeness })
       });
       const data = await resp.json();
       if (!resp.ok) {
@@ -106,6 +113,17 @@
     document.getElementById('bond-status').textContent = `คุณยังไม่ได้ตั้งชื่อ ให้เพิ่ม ?user=ชื่อ ใน URL หรือพิมพ์ชื่อ`;
     alert('รีเซ็ทชื่อแล้ว');
   }
+
+  // politeness selector handling
+  function setPoliteness(level) {
+    localStorage.setItem('mali_politeness', level);
+    alert('บันทึกระดับความสุภาพ: ' + level);
+  }
+  (function() {
+    const p = localStorage.getItem('mali_politeness') || 'normal';
+    const sel = document.getElementById('politeness');
+    if (sel) sel.value = p;
+  })();
 </script>
 
 </body>
