@@ -23,7 +23,7 @@ function buildHeartPrompt(characterName, userName, userMessage) {
   const nameText = userName ? `ผู้ใช้มีชื่อว่า ${userName}.` : 'ชื่อผู้ใช้ยังไม่ถูกระบุ.';
   // System prompt instructing the assistant about persona and memory
   // Force Thai language and polite persona behavior
-  const system = `คุณคือ ${persona.name} — บุคลิก: ${persona.personality}; โทนการตอบ: ${persona.tone}. ${persona.greeting} ${nameText} จำชื่อนี้ไว้และเรียกผู้ใช้ด้วยชื่อเมื่อเหมาะสม. ตอบเป็นภาษาไทยเสมอ โดยรักษาโทนของตัวละคร และตอบด้วยความสุภาพ กระชับ และเป็นมิตร.`;
+  const system = `คุณคือ ${persona.name} — บุคลิก: ${persona.personality}; โทนการตอบ: ${persona.tone}. ${persona.greeting} ${nameText} จำชื่อนี้ไว้และเรียกผู้ใช้ด้วยชื่อเมื่อเหมาะสม. ตอบเป็นภาษาไทยเสมอ โดยรักษาโทนของตัวละคร และตอบด้วยความสุภาพ กระชับ และเป็นมิตร. ใช้คำลงท้ายแบบสุภาพ "คะ" สำหรับคำถาม และ "ค่ะ" สำหรับประโยคบอกเล่า/ยืนยันเสมอ.`;
   const user = `ผู้ใช้พูดว่า: "${userMessage}"`;
   return { system, user };
 }
