@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const { OpenAI } = require('openai');
 const { buildHeartPrompt } = require('./server_persona');
+const { saveUserName, getUserByName } = require('./server_memory');
 
 const app = express();
 app.use(cors());
@@ -25,15 +26,13 @@ const userMemory = {};
 
 app.post('/api/chat', async (req, res) => {
   const { prompt, character, userName } = req.body;
-  // record userName in memory if provided
+  // persist userName if provided
   if (userName) {
-    userMemory[userName] = { name: userName, lastSeen: Date.now() };
+    try { await saveUserName(userName); } catch (e) { console.error('Failed to save user name:', e.message); }
   }
   const effectiveUser = userName || (prompt && prompt._user) || null;
-  const userKey = effectiveUser || 'anonymous';
-
   const { system, user } = buildHeartPrompt(character || 'Momo', effectiveUser, prompt);
-  
+
   if (!prompt) {
     return res.status(400).json({ error: 'Missing prompt' });
   }

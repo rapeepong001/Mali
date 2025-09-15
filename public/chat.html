@@ -29,6 +29,11 @@
   <input type="text" id="user-input" placeholder="พิมพ์ข้อความ..." />
   <button onclick="sendMessage()">ส่ง</button>
 </div>
+<div style="padding:10px;background:#fff0f5;display:flex;gap:8px;align-items:center;">
+  <input id="name-field" placeholder="ตั้งชื่อของคุณ (ตัวอย่าง: Rap)" value="" />
+  <button onclick="setName()">ตั้งชื่อ</button>
+  <button onclick="resetName()">รีเซ็ทชื่อ</button>
+</div>
 
 <script>
   let userName = localStorage.getItem("mali_username") || null;
@@ -84,6 +89,22 @@
     } catch (e) {
       appendMessage('เกิดข้อผิดพลาดเชื่อมต่อ', true);
     }
+  }
+
+  function setName() {
+    const v = document.getElementById('name-field').value.trim();
+    if (!v) return alert('กรุณากรอกชื่อ');
+    userName = v;
+    localStorage.setItem('mali_username', userName);
+    document.getElementById('bond-status').textContent = `สวัสดี ${userName}! ความสัมพันธ์: เริ่มต้น`;
+    alert('บันทึกชื่อเรียบร้อย');
+  }
+
+  function resetName() {
+    localStorage.removeItem('mali_username');
+    userName = null;
+    document.getElementById('bond-status').textContent = `คุณยังไม่ได้ตั้งชื่อ ให้เพิ่ม ?user=ชื่อ ใน URL หรือพิมพ์ชื่อ`;
+    alert('รีเซ็ทชื่อแล้ว');
   }
 </script>
 
