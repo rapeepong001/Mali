@@ -42,3 +42,8 @@ It will return:
 Mali-secure and sweet 💖
 
 <!-- Deploy trigger: touched README to force Railway rebuild -->
+
+## Adding a site logo
+
+To show a logo on every page, copy your logo file to `public/images/Logo.png`.
+The pages will load `/images/Logo.png` and hide the image if it is missing. If you want me to add the file for you, upload `Logo.png` here and I will place it in `public/images/`.
