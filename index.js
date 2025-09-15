@@ -12,6 +12,11 @@ app.use(express.json());
 const publicDir = path.join(__dirname, 'public');
 app.use(express.static(publicDir));
 
+if (!process.env.OPENAI_API_KEY) {
+  console.error('Missing OPENAI_API_KEY environment variable. Set it in your environment or Railway variables.');
+  // Do not exit in this environment to allow health checks, but warn loudly.
+}
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 app.post('/api/chat', async (req, res) => {
@@ -27,8 +32,19 @@ app.post('/api/chat', async (req, res) => {
     });
     res.json({ reply: response.data.choices[0].message.content });
   } catch (err) {
-    console.error('OpenAI API error:', err);
-    res.status(500).json({ error: 'OpenAI API failed' });
+    // Log useful debug info without exposing secrets
+    try {
+      console.error('OpenAI API error message:', err.message);
+      if (err.response && err.response.status) {
+        console.error('OpenAI response status:', err.response.status);
+      }
+      if (err.response && err.response.data) {
+        console.error('OpenAI response data:', JSON.stringify(err.response.data));
+      }
+    } catch (logErr) {
+      console.error('Error while logging OpenAI error:', logErr);
+    }
+    res.status(500).json({ error: 'OpenAI API failed', message: err.message });
   }
 });
 
